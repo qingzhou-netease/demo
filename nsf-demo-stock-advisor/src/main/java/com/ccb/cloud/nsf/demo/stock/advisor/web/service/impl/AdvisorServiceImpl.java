@@ -33,7 +33,7 @@ public class AdvisorServiceImpl implements IAdvisorService {
     @Autowired
     HostHeaderInterceptor hostHeaderInterceptor;
 
-    @Bean("custom")
+    @Bean
     public RestTemplate restTemplate() {
         RestTemplate restTemplate =  new RestTemplate();
         restTemplate.setInterceptors(Arrays.asList(hostHeaderInterceptor));
@@ -41,7 +41,6 @@ public class AdvisorServiceImpl implements IAdvisorService {
     }
 
     @Autowired
-    @Qualifier("custom")
     RestTemplate restTemplate;
 
     @Value("${hot_stock_ids}")

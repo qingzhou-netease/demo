@@ -1,13 +1,13 @@
 nsf:
   type: http
   version: 2.0
-  nsfServer: nsf-server-cust56.netease.com
+  nsfServer: nsf-server.jxjk.yuheng.com
   #  基本信息
   application:
     name: nsf-demo-stock-advisor
     version: 0.0.1
     desc: this is service description
-    projectCode: cjh
+    projectCode: project1
     envCode: prod
   # 应用监控
   metric:
@@ -17,5 +17,5 @@ nsf:
       - className: com.ccb.cloud.nsf.demo.stock.advisor.web.service.imp.*
   # 服务鉴权配置
   authority:
-    accessKey: 1e1bb7cca2e642cfb080926ae9760ec4
-    secretKey: c745fc3ccc044a9aa255bb3b044fd966
+    accessKey: 3edf7f7d70434b1b9520b54693132591
+    secretKey: 6e2b23bbdac0412aa924b598d88d2ffe

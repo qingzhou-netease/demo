@@ -1,18 +1,18 @@
 nsf:
   type: http
   version: 2.0
-  nsfServer: nsf-server.multienv.qingzhou.com
+  nsfServer: nsf-server-cust56.netease.com
   #  基本信息
   application:
     name: nsf-demo-stock-proxy
     version: 0.0.1
     desc: this is service description
-    projectCode: project1
+    projectCode: cjh
     envCode: prod
   # 应用监控
   metric:
     enable: true # 是否启用hystrix的metrics应用监控
   #服务鉴权配置
   authority:
-    accessKey: 3edf7f7d70434b1b9520b54693132591
-    secretKey: 6e2b23bbdac0412aa924b598d88d2ffe
+    accessKey: 1e1bb7cca2e642cfb080926ae9760ec4
+    secretKey: c745fc3ccc044a9aa255bb3b044fd966

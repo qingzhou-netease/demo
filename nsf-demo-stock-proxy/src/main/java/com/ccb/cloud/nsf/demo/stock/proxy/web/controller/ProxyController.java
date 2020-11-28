@@ -49,7 +49,7 @@ public class ProxyController {
         String body = StreamUtils.copyToString(request.getInputStream(), Charset.forName("UTF-8"));
         URI url = URI.create(proxy + uri + "?" +queryString);
 
-        logger.info("proxy, url:{}", url);
+        logger.info("proxy, url:{}, headers:{}", url, httpHeaders);
 
         ResponseEntity<String> response = restTemplate.exchange(new RequestEntity<>(body, httpHeaders,HttpMethod.resolve(method), url), String.class);
         if (response.getStatusCodeValue() == 200) {

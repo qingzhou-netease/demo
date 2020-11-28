@@ -24,7 +24,7 @@ public class StockServiceImpl implements IStockService {
     private static Logger log = LoggerFactory.getLogger(StockServiceImpl.class);
 
     @Autowired
-    @Qualifier("custom")
+//    @Qualifier("custom")
     RestTemplate restTemplate;
 
     @Value("${stock_provider_url}")

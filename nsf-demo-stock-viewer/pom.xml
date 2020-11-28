@@ -46,7 +46,6 @@
 		</dependencies>
 	</dependencyManagement>
 
-
 	<build>
 		<plugins>
 			<plugin>
@@ -57,23 +56,19 @@
 					<target>1.8</target>
 				</configuration>
 			</plugin>
-			<plugin>
-			      <!-- Build an executable JAR -->
-			      <groupId>org.apache.maven.plugins</groupId>
-			      <artifactId>maven-jar-plugin</artifactId>
-			      <version>3.1.0</version>
-			      <configuration>
+			 <plugin>
+			    <!-- Build an executable JAR -->
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-jar-plugin</artifactId>
+			    <version>2.4</version>
+			    <configuration>
 				<archive>
-				  <manifest>
-				    <addClasspath>true</addClasspath>
-				    <classpathPrefix>lib/</classpathPrefix>
-				    <mainClass>com.ccb.cloud.nsf.demo.stock.viewer.StockViewerApplication</mainClass>
-				  </manifest>
+				    <manifest>
+					<mainClass>com.ccb.cloud.nsf.demo.stock.viewer.StockViewerApplication</mainClass>
+				    </manifest>
 				</archive>
-			      </configuration>
-			    </plugin>
-			<!-- <plugin> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-maven-plugin</artifactId>
-				</plugin> -->
+			    </configuration>
+			</plugin>
 		</plugins>
 	</build>
 </project>

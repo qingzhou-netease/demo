@@ -148,11 +148,11 @@ public class PanelController {
 
         Runtime runtime = Runtime.getRuntime();
         try {
-            runtime.exec("stress --vm 2 --vm-bytes 256M --timeout 30s");
+            runtime.exec("stress --vm 2 --vm-bytes 128M --timeout 30s");
         } catch (IOException e) {
             log.warn("exec stress command failed", e);
         }
-        String result = "malloc 256M for 30 seconds";
+        String result = "malloc 128M for 30 seconds";
         LogManager.put(UUID.randomUUID().toString(), result);
         return new HttpResponse(result);
     }

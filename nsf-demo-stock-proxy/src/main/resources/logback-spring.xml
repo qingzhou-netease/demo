@@ -46,6 +46,7 @@
 		<logger name="org.springframework.web" level="info" />
 		<logger name="org.apache.zookeeper" level="info" />
 		<logger name="org.springframework.web.client" level="debug" />
+		<logger name="com.netease.cloud.nsf.agent" level="debug" />
 
 	</springProfile>
 	<springProfile name="yq-online, yqdg-pubtest, lt-online, jd-online">

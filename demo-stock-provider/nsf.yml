@@ -1,0 +1,22 @@
+nsf:
+  type: http
+  version: 2.0
+  nsfServer: nsf-server.jxjk.yuheng.com
+  #  基本信息
+  application:
+    name: demo-stock-provider
+    version: 0.0.1
+    desc: this is service description
+    projectCode: project1
+    envCode: prod
+    zone: beishu-AZ1
+  # 应用监控
+  metric:
+    enable: true # 是否启用hystrix的metrics应用监控
+  manager:
+    patterns:
+      - className: com.demo.stock.provider.web.service.impl.*
+  # 服务鉴权配置
+  authority:
+    accessKey: 3edf7f7d70434b1b9520b54693132591
+    secretKey: 6e2b23bbdac0412aa924b598d88d2ffe

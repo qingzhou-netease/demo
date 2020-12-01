@@ -1,0 +1,443 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+
+    <link rel="stylesheet" href="/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="/css/dashboard.css"/>
+    <link rel="stylesheet" href="/css/bootstrap-toggle.min.css"/>
+</head>
+<body>
+
+<nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
+    <a class="navbar-brand col-sm-3 col-md-2 mr-0" style="font-size: 20px" href="#">股票演示系统</a>
+    <div class="d-flex flex-row form-control form-control-dark">
+        <div class="p-2">
+            <button id="refresh_hot_advice" type="button" class="btn btn-secondary btn-sm">刷新</button>
+        </div>
+        <div style="line-height: 30px" class="p-2">热门股票推荐 :</div>
+        <div style="line-height: 30px" class="p-2" id="hot_advice"></div>
+
+    </div>
+</nav>
+
+<div id="left-menu" class="container-fluid">
+
+    <div></div>
+    <div class="row">
+        <nav class="col-md-2 d-none d-md-block bg-light sidebar" style="padding-top: 5em">
+
+            <div class="sidebar-sticky">
+
+                <div class="input-group d-flex flex-row-reverse">
+                    <div class="input-group-append">
+                        <button id="refresh_stock_list" type="button" class="btn btn-sm" style="margin-right: 5px">刷新
+                        </button>
+                    </div>
+                    <input style="margin-right: 5px" id="delay" type="text" class="input-sm" size="3" value="0"
+                           placeholder="秒"/>
+                    <p class="text-center"
+                       style="color: darkgray; font-size: 12px; line-height: 34px; margin-bottom: 0px ">
+                        设置模拟后端的处理延迟，单位为秒。</p>
+
+                </div>
+                <ul class="nav flex-column" id="stock_list">
+
+                </ul>
+
+            </div>
+        </nav>
+    </div>
+</div>
+
+<main id="stock_detail" role="main" class="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+    <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+        <h1 id="nameid" class="h2"></h1>
+    </div>
+
+    <div class="col-md-6 col-md-offset-5" style="float:left">
+        <img id="dayK" src="" class="center"/>
+    </div>
+    <!-- 股票预测数据表格 -->
+    <!--
+    <div class="table-responsive col-md-6 col-md-offset-5">
+        <h2>预测</h2>
+        <table class="table table-striped table-sm">
+            <thead>
+            <tr>
+                <th>日期</th>
+                <th>预测开盘价</th>
+                <th>预测收盘价</th>
+                <th>预测最高价</th>
+                <th>预测最低价</th>
+            </tr>
+            </thead>
+            <tbody id="predict">
+            <tr>
+                <td id="date"></td>
+                <td id="predictOpeningPrice"></td>
+                <td id="predictClosingPrice"></td>
+                <td id="predictTopTodayPrice"></td>
+                <td id="predictBottomTodayPrice"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    -->
+
+    <div class="table-responsive">
+        <h2 style="margin-top: 10px">详情</h2>
+        <table class="table table-striped table-sm">
+            <thead>
+            <tr>
+                <th>今日开盘价</th>
+                <th>昨日收盘价</th>
+                <th>最近成交价</th>
+                <th>买入价</th>
+                <th>卖出价</th>
+                <th>今日最高价</th>
+                <th>今日最低价</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td id="opening"></td>
+                <td id="closing"></td>
+                <td id="current"></td>
+                <td id="in"></td>
+                <td id="out"></td>
+                <td id="top"></td>
+                <td id="bottom"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <div class="form-group row">
+            <div class="col-1">
+                <input style="margin-right: 5px" id="header_key" type="text" class="input-sm" size="5"
+                placeholder="header key"/>
+            </div>
+            <div class="col-1">
+                <input style="margin-right: 5px" id="header_value" type="text" class="input-sm" size="5"
+                       placeholder="header value"/>
+            </div>
+        </div>
+        <button id="echo_advisor" type="button" class="btn btn-info btn-sm">echo advisor 10 times</button>
+        <button id="echo_provider" type="button" class="btn btn-info btn-sm">echo provider 10 times </button>
+        <!--<button id="echo_advisor_with_header" type="button" class="btn btn-info btn-sm">echo advisor with header-->
+        <!--</button>-->
+        <button id="echo_advisor_with_header" type="button" class="btn btn-info btn-sm">echo advisor with header</button>
+        <button id="stress" type="button" class="btn btn-info btn-sm">stress for provider</button>
+    </div>
+
+    <div class="form-group">
+        <label for="logs">
+            <button id="clear_logs" type="button" class="btn btn-secondary btn-sm">清空</button>
+        </label>
+        <textarea class="form-control input-sm" id="logs" rows="10" disabled="true"></textarea>
+    </div>
+
+</main>
+
+</body>
+
+<script src="/js/jquery.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/bootstrap-toggle.min.js"></script>
+
+<script type="text/javascript">
+
+    var dubbo = "";
+
+    var searchStockById = function (id) {
+
+        var url = dubbo + "/stocks/" + id;
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            dataType: 'json',
+            success: function (s) {
+                if (s) {
+                    $('#nameid').text(s.name + '(' + s.id + ')')
+                    $('#dayK').attr('src', s.dailyKLineAddr)
+                    $('#opening').text(s.openingPrice)
+                    $('#closing').text(s.closingPrice)
+                    $('#current').text(s.currentPrice)
+                    $('#in').text(s.inPrice)
+                    $('#out').text(s.outPrice)
+                    $('#top').text(s.topTodayPrice)
+                    $('#bottom').text(s.bottomTodayPrice)
+                    $('#stock_detail').show();
+                }
+                refreshLog();
+            }
+        });
+    }
+
+    var getPredictListById = function (id) {
+
+        var url = "/predictPrice/" + id;
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            dataType: 'json',
+            success: function (p) {
+                var trList = $("#predict");
+                trList.empty();
+                for (var i in p) {
+                    var tr = "<tr><td>" + p[i].date + "</td>" +
+                        "<td>" + p[i].predictBottomTodayPrice + "</td>" +
+                        "<td>" + p[i].predictClosingPrice + "</td>" +
+                        "<td>" + p[i].predictOpeningPrice + "</td>" +
+                        "<td>" + p[i].predictTopTodayPrice + "</td></tr>";
+                    trList.append(tr);
+                }
+
+            }
+        });
+    }
+
+
+    var getStockList = function (delay) {
+
+        var list = $('#stock_list');
+        list.empty();
+        var url = dubbo + "/stocks?delay=" + delay;
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            dataType: 'json',
+            success: function (res) {
+                list.empty();
+                if (res) {
+                    if (res.message) {
+                        list.append(res.message);
+                    } else {
+                        res.stocks.forEach(function (stock) {
+                            list.append('<li class="nav-item">' +
+                                '<a class="nav-link active stock_href" href="#" target-id="' + stock.id + '">' +
+                                stock.name +
+                                '</a></li>');
+                        })
+
+                        setTimeout(function () {
+                            clickFirstInLeftMenu();
+                        }, 200);
+                    }
+                    refreshLog();
+                }
+            }
+        });
+    }
+
+
+    var getHotAdvice = function () {
+
+        var list = $('#hot_advice');
+        list.empty();
+        var url = dubbo + "/advices/hot";
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            // dataType: 'json',
+            success: function (res) {
+                list.empty();
+                if (res) {
+                    if (res.message) {
+                        list.append(res.message.substring(0, 100) + "...");
+                    } else {
+                        res.stocks.forEach(function (stock) {
+                            list.append('<span href="#">' + stock.name + '</span>').append('&nbsp;');
+                        })
+                    }
+                }
+                refreshLog();
+            }
+        });
+    }
+
+    var stress = function () {
+        var url = "/stress";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            dataType: 'json',
+            success: function (res) {
+                if (res) {
+                    refreshLog();
+                }
+            }
+        });
+    }
+
+    var refreshLog = function () {
+
+        var console = $('#logs');
+        var url = "/logs"
+
+        $.ajax({
+            type: 'GET',
+            url: url,
+            dataType: 'json',
+            success: function (res) {
+                if (res) {
+                    console.empty();
+                    console.append(res.message);
+                }
+                console.scrollTop(console[0].scrollHeight);
+            }
+        });
+    }
+
+    var clearLogs = function () {
+
+        var url = "/logs/clear";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            dataType: 'json',
+            success: function (res) {
+                if (res) {
+                    refreshLog();
+                }
+            }
+        });
+    }
+
+    var echoAdvisor = function () {
+
+        var url = dubbo + "/echo/advisor";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (res) {
+                if (res) {
+                    refreshLog();
+                }
+            }
+        });
+    }
+
+    var echoProvider = function () {
+
+        var url = dubbo + "/echo/provider";
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (res) {
+                if (res) {
+                    refreshLog();
+                }
+            }
+        });
+    }
+
+    var echoAdvisorWithHeader = function () {
+        var headerKey = $("#header_key").val();
+        var headerValue = $("#header_value").val();
+        var url = dubbo + "/echo/advisor/" + headerKey + "/" + headerValue;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            beforeSend: function(request) {
+                request.setRequestHeader(headerKey, headerValue);
+            },
+            success: function (res) {
+                if (res) {
+                    refreshLog();
+                }
+            }
+        });
+    }
+
+    var echoProviderWithHeader = function () {
+        var headerKey = $("#header_key").val();
+        var headerValue = $("#header_value").val();
+        var url = dubbo + "/echo/provider/" + headerKey + "/" + headerValue;
+        $.ajax({
+            type: 'GET',
+            url: url,
+            success: function (res) {
+                if (res) {
+                    refreshLog();
+                }
+            }
+        });
+    }
+
+    var init = function () {
+        getHotAdvice();
+        getStockList(0);
+    }
+
+    //page is ready
+    $(function () {
+
+        $('#stock_detail').hide();
+        init();
+
+        $(document).on("click", '.stock_href', function () {
+            var stockId = $(event.target).attr('target-id');
+            searchStockById(stockId);
+            //getPredictListById(stockId);
+        })
+
+        $('#refresh_stock_list').click(function () {
+            var delay = $('#delay').val();
+            getStockList(delay);
+        })
+
+
+        $('#refresh_hot_advice').click(function () {
+            getHotAdvice();
+        })
+
+        $('#clear_logs').click(function () {
+            clearLogs();
+        })
+
+        $('#echo_advisor').click(function () {
+            echoAdvisor();
+        })
+
+        $('#stress').click(function () {
+            stress();
+        })
+
+
+        $('#echo_advisor_with_header').click(function () {
+            echoAdvisorWithHeader();
+        })
+
+        $('#echo_provider_with_header').click(function () {
+            echoProviderWithHeader();
+        })
+
+        $('#echo_provider').click(function () {
+            echoProvider();
+        })
+
+        $('#dubbo_switch').change(function () {
+            var dubbo_on = $(this).prop('checked');
+            dubbo = dubbo_on ? "/dubbo" : "";
+        })
+
+
+    })
+
+    var clickFirstInLeftMenu = function () {
+        var hrefs = $('.stock_href');
+        if (hrefs) {
+            hrefs[0].click();
+        }
+    }
+
+</script>
+
+</html>

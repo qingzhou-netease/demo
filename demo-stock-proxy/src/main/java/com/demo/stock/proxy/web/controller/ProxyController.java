@@ -52,6 +52,7 @@ public class ProxyController {
             if (headerName.equals("color-chain")) {
                 headerVal += String.format("-> %s:%s", app, version);
             }
+            httpHeaders.add(headerName, headerVal);
         }
 
         String body = StreamUtils.copyToString(request.getInputStream(), Charset.forName("UTF-8"));

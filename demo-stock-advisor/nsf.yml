@@ -4,7 +4,7 @@ nsf:
   nsfServer: nsf-server-cust56.netease.com
   #  基本信息
   application:
-    name: nsf-demo-stock-advisor
+    name: demo-stock-advisor
     version: 0.0.1
     desc: this is service description
     projectCode: cjh
